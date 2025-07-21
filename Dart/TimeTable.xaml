@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<maui:ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:maui="http://schemas.microsoft.com/dotnet/2021/maui"
+             x:Class="Dart.TimeTable">
+    <maui:ScrollView>
+
+        <maui:VerticalStackLayout Margin="20,2,2,2">
+            <maui:Grid HorizontalOptions="Fill"  VerticalOptions="Start">
+                <maui:Grid.ColumnDefinitions>
+                    <maui:ColumnDefinition Width="1*"/>
+                    <maui:ColumnDefinition Width="1*"/>
+                    <maui:ColumnDefinition Width="1*"/>
+                </maui:Grid.ColumnDefinitions>
+                
+                <maui:Button maui:Grid.Column="0" Text="North" x:Name="ShowNorth" BackgroundColor="Grey" HorizontalOptions="Start"></maui:Button>
+                <maui:Button maui:Grid.Column="1" Text="South" x:Name="ShowSouth" BackgroundColor="DarkGrey" HorizontalOptions="Center"></maui:Button>
+                <maui:Button maui:Grid.Column="2" Text="Refresh" x:Name="RefreshTimes" HorizontalOptions="End"></maui:Button>
+            </maui:Grid>
+
+            <maui:VerticalStackLayout x:Name="TimeTablesNorth" IsVisible="True" Margin="0,20,0,0">
+
+            </maui:VerticalStackLayout>
+            <maui:VerticalStackLayout x:Name="TimeTablesSouth" IsVisible="False" Margin="0,20,0,0">
+            </maui:VerticalStackLayout>
+        </maui:VerticalStackLayout>
+    </maui:ScrollView>
+    
+</maui:ContentPage>
