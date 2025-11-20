@@ -1,23 +1,78 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>  
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"  
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:dm="clr-namespace:MauiEx;assembly=MauiEx"
-             x:Class="Dart.MainPage">  
+             x:Class="Dart.MainPage"
+             Title="Irish Rail Times">
 
-    <ScrollView>  
+    <ScrollView>
 
-        <VerticalStackLayout  
-            Padding="30,0"  
-            Spacing="25">
-            <dm:AutoSuggestBox PlaceholderText="Search" 
-                            QuerySubmitted="AutoSuggestBox_QuerySubmitted"
-                            SuggestionChosen="AutoSuggestBox_SuggestionChosen"
-                            x:Name="AutoSuggestBox"/>
+        <VerticalStackLayout
+            Padding="20"
+            Spacing="20">
 
-            <VerticalStackLayout x:Name="RecentStations">
+            <!-- Header -->
+            <Label
+                Text="Find Train Times"
+                FontSize="28"
+                FontAttributes="Bold"
+                Margin="0,10,0,0"/>
 
+            <!-- Search Box -->
+            <Border
+                StrokeThickness="0"
+                Background="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                Padding="5"
+                Margin="0,5,0,0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <dm:AutoSuggestBox
+                    PlaceholderText="Search for a station..."
+                    QuerySubmitted="AutoSuggestBox_QuerySubmitted"
+                    SuggestionChosen="AutoSuggestBox_SuggestionChosen"
+                    x:Name="AutoSuggestBox"
+                    BackgroundColor="Transparent"/>
+            </Border>
+
+            <!-- Recent Stations Section -->
+            <VerticalStackLayout Spacing="12" Margin="0,10,0,0">
+                <Label
+                    Text="Recent Stations"
+                    FontSize="20"
+                    FontAttributes="Bold"
+                    x:Name="RecentStationsHeader"
+                    IsVisible="False"/>
+
+                <VerticalStackLayout x:Name="RecentStations" Spacing="8">
+                    <!-- Recent stations will be added here -->
+                </VerticalStackLayout>
+
+                <!-- Empty State -->
+                <VerticalStackLayout
+                    x:Name="EmptyState"
+                    Spacing="10"
+                    Padding="20"
+                    IsVisible="True"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center">
+                    <Label
+                        Text="🚆"
+                        FontSize="48"
+                        HorizontalOptions="Center"/>
+                    <Label
+                        Text="No recent stations"
+                        FontSize="16"
+                        HorizontalOptions="Center"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
+                    <Label
+                        Text="Search for a station to get started"
+                        FontSize="14"
+                        HorizontalOptions="Center"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray500}}"/>
+                </VerticalStackLayout>
             </VerticalStackLayout>
-        </VerticalStackLayout>  
-    </ScrollView>  
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentPage>

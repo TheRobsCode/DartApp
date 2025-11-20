@@ -1,29 +1,138 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<maui:ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:maui="http://schemas.microsoft.com/dotnet/2021/maui"
-             x:Class="Dart.TimeTable">
-    <maui:ScrollView>
+             x:Class="Dart.TimeTable"
+             x:Name="TimeTablePage">
+    <ScrollView>
 
-        <maui:VerticalStackLayout Margin="20,2,2,2">
-            <maui:Grid HorizontalOptions="Fill"  VerticalOptions="Start">
-                <maui:Grid.ColumnDefinitions>
-                    <maui:ColumnDefinition Width="1*"/>
-                    <maui:ColumnDefinition Width="1*"/>
-                    <maui:ColumnDefinition Width="1*"/>
-                </maui:Grid.ColumnDefinitions>
-                
-                <maui:Button maui:Grid.Column="0" Text="North" x:Name="ShowNorth" BackgroundColor="Grey" HorizontalOptions="Start"></maui:Button>
-                <maui:Button maui:Grid.Column="1" Text="South" x:Name="ShowSouth" BackgroundColor="DarkGrey" HorizontalOptions="Center"></maui:Button>
-                <maui:Button maui:Grid.Column="2" Text="Refresh" x:Name="RefreshTimes" HorizontalOptions="End"></maui:Button>
-            </maui:Grid>
+        <VerticalStackLayout Padding="20" Spacing="15">
 
-            <maui:VerticalStackLayout x:Name="TimeTablesNorth" IsVisible="True" Margin="0,20,0,0">
+            <!-- Station Name Header -->
+            <Label
+                x:Name="StationNameLabel"
+                FontSize="24"
+                FontAttributes="Bold"
+                Margin="0,5,0,10"/>
 
-            </maui:VerticalStackLayout>
-            <maui:VerticalStackLayout x:Name="TimeTablesSouth" IsVisible="False" Margin="0,20,0,0">
-            </maui:VerticalStackLayout>
-        </maui:VerticalStackLayout>
-    </maui:ScrollView>
-    
-</maui:ContentPage>
+            <!-- Direction Toggle and Refresh -->
+            <Grid HorizontalOptions="Fill" ColumnSpacing="10" RowSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Direction Selector -->
+                <Border
+                    Grid.Column="0"
+                    StrokeThickness="0"
+                    Background="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray800}}"
+                    Padding="4">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10"/>
+                    </Border.StrokeShape>
+
+                    <Grid ColumnSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button
+                            Grid.Column="0"
+                            Text="Northbound"
+                            x:Name="ShowNorth"
+                            CornerRadius="8"
+                            FontSize="14" TextColor="White"
+                            Padding="10,8"/>
+
+                        <Button
+                            Grid.Column="1"
+                            Text="Southbound"
+                            x:Name="ShowSouth"
+                            CornerRadius="8"
+                            FontSize="14" TextColor="White"
+                            Padding="10,8"/>
+                    </Grid>
+                </Border>
+
+                <!-- Refresh Button -->
+                <Button
+                    Grid.Column="1"
+                    Text="↻"
+                    x:Name="RefreshTimes"
+                    CornerRadius="10"
+                    FontSize="24"
+                    Padding="0"
+                    HorizontalOptions="Fill"/>
+            </Grid>
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator
+                x:Name="LoadingIndicator"
+                IsRunning="False"
+                IsVisible="False"
+                Color="{StaticResource Primary}"
+                HeightRequest="40"
+                Margin="0,20,0,0"/>
+
+            <!-- Timetable Content -->
+            <VerticalStackLayout x:Name="TimeTablesNorth" IsVisible="True" Spacing="8" Margin="0,5,0,0">
+                <!-- Train times will be added here -->
+            </VerticalStackLayout>
+
+            <VerticalStackLayout x:Name="TimeTablesSouth" IsVisible="False" Spacing="8" Margin="0,5,0,0">
+                <!-- Train times will be added here -->
+            </VerticalStackLayout>
+
+            <!-- Empty State for North -->
+            <VerticalStackLayout
+                x:Name="EmptyStateNorth"
+                Spacing="10"
+                Padding="20"
+                IsVisible="False"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                Margin="0,30,0,0">
+                <Label
+                    Text="🚂"
+                    FontSize="48"
+                    HorizontalOptions="Center"/>
+                <Label
+                    Text="No northbound trains"
+                    FontSize="16"
+                    HorizontalOptions="Center"
+                    TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
+            </VerticalStackLayout>
+
+            <!-- Empty State for South -->
+            <VerticalStackLayout
+                x:Name="EmptyStateSouth"
+                Spacing="10"
+                Padding="20"
+                IsVisible="False"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                Margin="0,30,0,0">
+                <Label
+                    Text="🚂"
+                    FontSize="48"
+                    HorizontalOptions="Center"/>
+                <Label
+                    Text="No southbound trains"
+                    FontSize="16"
+                    HorizontalOptions="Center"
+                    TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
+            </VerticalStackLayout>
+
+            <!-- Last Updated Label -->
+            <Label
+                x:Name="LastUpdatedLabel"
+                FontSize="12"
+                HorizontalOptions="Center"
+                Margin="0,10,0,0"
+                TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

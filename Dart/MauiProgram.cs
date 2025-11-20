@@ -18,6 +18,7 @@ namespace Dart
             builder.UseMauiEx();
             builder.Services.AddTransient<IDartService,DartService>();
             builder.Services.AddTransient<ICacheService, CacheService>();
+            builder.Services.AddSingleton<IAppActionsService, AppActionsService>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
