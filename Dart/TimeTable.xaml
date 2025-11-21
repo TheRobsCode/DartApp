@@ -5,7 +5,8 @@
              x:Name="TimeTablePage">
     <ScrollView>
 
-        <VerticalStackLayout Padding="20" Spacing="15">
+        <VerticalStackLayout Padding="20"
+                Spacing="15">
 
             <!-- Station Name Header -->
             <Label
@@ -15,7 +16,9 @@
                 Margin="0,5,0,10"/>
 
             <!-- Direction Toggle and Refresh -->
-            <Grid HorizontalOptions="Fill" ColumnSpacing="10" RowSpacing="10">
+            <Grid HorizontalOptions="Fill"
+                    ColumnSpacing="10"
+                    RowSpacing="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="1*"/>
@@ -25,7 +28,7 @@
                 <Border
                     Grid.Column="0"
                     StrokeThickness="0"
-                    Background="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray800}}"
+                    Background="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
                     Padding="4">
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="10"/>
@@ -42,7 +45,8 @@
                             Text="Northbound"
                             x:Name="ShowNorth"
                             CornerRadius="8"
-                            FontSize="14" TextColor="White"
+                            FontSize="14"
+                                TextColor="White"
                             Padding="10,8"/>
 
                         <Button
@@ -50,7 +54,8 @@
                             Text="Southbound"
                             x:Name="ShowSouth"
                             CornerRadius="8"
-                            FontSize="14" TextColor="White"
+                            FontSize="14"
+                                TextColor="White"
                             Padding="10,8"/>
                     </Grid>
                 </Border>
@@ -76,11 +81,17 @@
                 Margin="0,20,0,0"/>
 
             <!-- Timetable Content -->
-            <VerticalStackLayout x:Name="TimeTablesNorth" IsVisible="True" Spacing="8" Margin="0,5,0,0">
+            <VerticalStackLayout x:Name="TimeTablesNorth"
+                    IsVisible="True"
+                    Spacing="8"
+                    Margin="0,5,0,0">
                 <!-- Train times will be added here -->
             </VerticalStackLayout>
 
-            <VerticalStackLayout x:Name="TimeTablesSouth" IsVisible="False" Spacing="8" Margin="0,5,0,0">
+            <VerticalStackLayout x:Name="TimeTablesSouth"
+                    IsVisible="False"
+                    Spacing="8"
+                    Margin="0,5,0,0">
                 <!-- Train times will be added here -->
             </VerticalStackLayout>
 
