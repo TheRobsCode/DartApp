@@ -1,16 +1,21 @@
 ﻿using Dart.Dtos;
 using Microsoft.Maui.Controls.Shapes;
+using Microsoft.Extensions.Logging;
 
 namespace Dart
 {
     public partial class TimeTable : ContentPage
     {
+        private readonly ILogger<TimeTable>? _logger;
         private readonly IDartService _dartService;
         private readonly string _station;
         private bool _isNorthVisible = true;
 
-        public TimeTable(IDartService dartService, string station)
+        public TimeTable(IDartService dartService, string station, ILogger<TimeTable>? logger = null)
         {
+            _logger = logger;
+            _logger?.LogInformation("TimeTable page initializing for station: {Station}", station);
+
             InitializeComponent();
             _dartService = dartService;
             _station = station;
@@ -25,6 +30,7 @@ namespace Dart
 
             UpdateDirectionButtons();
 
+            _logger?.LogDebug("Starting auto-refresh timer with 30-second interval");
             var timer = Application.Current.Dispatcher.CreateTimer();
             timer.Interval = TimeSpan.FromSeconds(30);
             timer.Tick += async (s, e) => await LoadTimeTableAsync();
@@ -54,37 +60,69 @@ namespace Dart
 
         private async Task LoadTimeTableAsync()
         {
+            _logger?.LogInformation("Loading timetable for station: {Station}", _station);
+
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 LoadingIndicator.IsVisible = true;
                 LoadingIndicator.IsRunning = true;
             });
 
-            var timeTables = await _dartService.GetTimeTable(_station);
-
-            MainThread.BeginInvokeOnMainThread(() =>
+            try
             {
-                TimeTablesNorth.Clear();
-                TimeTablesSouth.Clear();
+                var timeTables = await _dartService.GetTimeTable(_station);
 
-                foreach (var item in timeTables ?? Array.Empty<TimeTableDto>())
+                MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    var trainCard = CreateTimeTableCard(item);
-                    if (item.Direction == "Northbound")
-                        TimeTablesNorth.Add(trainCard);
-                    else if (item.Direction == "Southbound")
-                        TimeTablesSouth.Add(trainCard);
-                }
+                    TimeTablesNorth.Clear();
+                    TimeTablesSouth.Clear();
 
-                // Show empty states if no trains
-                EmptyStateNorth.IsVisible = _isNorthVisible && TimeTablesNorth.Children.Count == 0;
-                EmptyStateSouth.IsVisible = !_isNorthVisible && TimeTablesSouth.Children.Count == 0;
+                    var northboundCount = 0;
+                    var southboundCount = 0;
 
-                LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsRunning = false;
+                    foreach (var item in timeTables ?? Array.Empty<TimeTableDto>())
+                    {
+                        var trainCard = CreateTimeTableCard(item);
+                        if (item.Direction == "Northbound")
+                        {
+                            TimeTablesNorth.Add(trainCard);
+                            northboundCount++;
+                        }
+                        else if (item.Direction == "Southbound")
+                        {
+                            TimeTablesSouth.Add(trainCard);
+                            southboundCount++;
+                        }
+                    }
 
-                LastUpdatedLabel.Text = $"Last updated: {DateTime.Now:HH:mm:ss}";
-            });
+                    _logger?.LogInformation("Loaded timetable: {NorthboundCount} northbound, {SouthboundCount} southbound trains",
+                        northboundCount, southboundCount);
+
+                    // Show empty states if no trains
+                    EmptyStateNorth.IsVisible = _isNorthVisible && TimeTablesNorth.Children.Count == 0;
+                    EmptyStateSouth.IsVisible = !_isNorthVisible && TimeTablesSouth.Children.Count == 0;
+
+                    if (northboundCount == 0 && southboundCount == 0)
+                    {
+                        _logger?.LogWarning("No trains found for station: {Station}", _station);
+                    }
+
+                    LoadingIndicator.IsVisible = false;
+                    LoadingIndicator.IsRunning = false;
+
+                    LastUpdatedLabel.Text = $"Last updated: {DateTime.Now:HH:mm:ss}";
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Failed to load timetable for station: {Station}", _station);
+
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    LoadingIndicator.IsVisible = false;
+                    LoadingIndicator.IsRunning = false;
+                });
+            }
         }
 
         private static Border CreateTimeTableCard(TimeTableDto item)

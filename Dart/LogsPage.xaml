@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Dart.LogsPage"
+             Title="Logs">
+    <Grid RowDefinitions="Auto,*,Auto" Padding="16">
+
+        <!-- Header with buttons -->
+        <HorizontalStackLayout Grid.Row="0" Spacing="8" Margin="0,0,0,16">
+            <Button x:Name="RefreshButton"
+                    Text="Refresh"
+                    BackgroundColor="#512BD4"
+                    TextColor="White"
+                    Padding="12,6"
+                    CornerRadius="8" />
+            <Button x:Name="ShareButton"
+                    Text="Share Logs"
+                    BackgroundColor="#512BD4"
+                    TextColor="White"
+                    Padding="12,6"
+                    CornerRadius="8" />
+            <Button x:Name="ClearButton"
+                    Text="Clear Old Logs"
+                    BackgroundColor="#d32f2f"
+                    TextColor="White"
+                    Padding="12,6"
+                    CornerRadius="8" />
+        </HorizontalStackLayout>
+
+        <!-- Log files list -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout x:Name="LogsContainer" Spacing="8">
+                <!-- Log content will be added here dynamically -->
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Info footer -->
+        <Label Grid.Row="2"
+               x:Name="LogPathLabel"
+               FontSize="12"
+               TextColor="Gray"
+               Margin="0,16,0,0"
+               HorizontalTextAlignment="Center" />
+    </Grid>
+</ContentPage>

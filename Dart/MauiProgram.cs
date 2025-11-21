@@ -1,5 +1,7 @@
 ﻿using MauiEx;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
 
 namespace Dart
 {
@@ -7,6 +9,28 @@ namespace Dart
     {
         public static MauiApp CreateMauiApp()
         {
+            // Configure Serilog to write logs to a file
+            var logPath = Path.Combine(FileSystem.AppDataDirectory, "logs", "dart-.txt");
+
+            Log.Logger = new LoggerConfiguration()
+#if DEBUG
+                .MinimumLevel.Debug()
+#else
+                .MinimumLevel.Information()
+#endif
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.Maui", LogEventLevel.Warning)
+                .Enrich.FromLogContext()
+                .WriteTo.File(
+                    logPath,
+                    rollingInterval: RollingInterval.Day,
+                    retainedFileCountLimit: 7,
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {SourceContext}: {Message:lj}{NewLine}{Exception}")
+                .WriteTo.Debug()
+                .CreateLogger();
+
+            Log.Information("Starting Dart application");
+
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
@@ -16,12 +40,15 @@ namespace Dart
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
             builder.UseMauiEx();
+
+            // Add Serilog to the logging infrastructure
+            builder.Logging.AddSerilog(Log.Logger, dispose: true);
+
             builder.Services.AddTransient<IDartService,DartService>();
             builder.Services.AddTransient<ICacheService, CacheService>();
             builder.Services.AddSingleton<IAppActionsService, AppActionsService>();
-#if DEBUG
-            builder.Logging.AddDebug();
-#endif
+
+            Log.Information("Dart application configured successfully");
 
             return builder.Build();
         }
