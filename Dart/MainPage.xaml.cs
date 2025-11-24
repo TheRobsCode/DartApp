@@ -27,21 +27,14 @@ namespace Dart
             AutoSuggestBox.TextChanged += AutoSuggestBox_TextChanged;
             AutoSuggestBox.SuggestionChosen += AutoSuggestBox_SuggestionChosen;
 
+            // Load recent stations synchronously (fast - from preferences)
             _recent = _cacheService.Get<List<string>>("recent") ?? new List<string>();
             _logger.LogInformation("Loaded {RecentCount} recent stations from cache", _recent.Count);
-
-            Task.Run(async ()=> await SetupSuggestionsAsync().ConfigureAwait(false));
-            DrawRecentList();
-
-            // Update app shortcuts on startup with existing recent stations
-            if (_recent.Count > 0)
-            {
-                _logger.LogDebug("Updating app shortcuts with {Count} recent stations", _recent.Count);
-                Task.Run(async () => await _appActionsService.UpdateRecentStationsAsync(_recent));
-            }
         }
         private bool _isSubscribedToLifecycle = false;
-        protected override void OnAppearing()
+        private bool _hasInitialized = false;
+
+        protected override async void OnAppearing()
         {
             _logger.LogDebug("MainPage appearing");
             base.OnAppearing();
@@ -52,6 +45,29 @@ namespace Dart
                 _logger.LogDebug("Subscribing to app lifecycle events");
                 App.AppActivated += OnAppActivated;
                 _isSubscribedToLifecycle = true;
+            }
+
+            // Defer heavy operations until after the page is visible
+            if (!_hasInitialized)
+            {
+                _hasInitialized = true;
+
+                // Draw UI first (fast)
+                DrawRecentList();
+
+                // Then fetch suggestions in background (slow - network call)
+                _ = Task.Run(async () => await SetupSuggestionsAsync().ConfigureAwait(false));
+
+                // Update app shortcuts after a delay (lowest priority)
+                if (_recent.Count > 0)
+                {
+                    _ = Task.Run(async () =>
+                    {
+                        await Task.Delay(1000); // Defer by 1 second
+                        _logger.LogDebug("Updating app shortcuts with {Count} recent stations", _recent.Count);
+                        await _appActionsService.UpdateRecentStationsAsync(_recent);
+                    });
+                }
             }
         }
         protected void OnAppActivated()

@@ -39,12 +39,16 @@ namespace Dart
         {
             if (!Preferences.ContainsKey(key))
             {
+#if DEBUG
                 _logger.LogDebug("Cache miss for key: {Key}", key);
+#endif
                 return "";
             }
 
             var value = Preferences.Get(key, "").ToString();
+#if DEBUG
             _logger.LogDebug("Cache hit for key: {Key}, length: {Length}", key, value?.Length ?? 0);
+#endif
             return value;
         }
 
@@ -52,27 +56,35 @@ namespace Dart
         {
             if (!Preferences.ContainsKey(key))
             {
+#if DEBUG
                 _logger.LogDebug("Cache miss for key: {Key} (type {Type})", key, typeof(T).Name);
+#endif
                 return default;
             }
 
             if (string.IsNullOrEmpty(Preferences.Get(key, "")))
             {
+#if DEBUG
                 _logger.LogDebug("Empty cache value for key: {Key} (type {Type})", key, typeof(T).Name);
+#endif
                 return default;
             }
 
             var json = Preferences.Get(key, "").ToString();
             if (string.IsNullOrEmpty(json))
             {
+#if DEBUG
                 _logger.LogDebug("Empty JSON for cache key: {Key} (type {Type})", key, typeof(T).Name);
+#endif
                 return default;
             }
 
             try
             {
                 var result = JsonSerializer.Deserialize<T>(json);
+#if DEBUG
                 _logger.LogDebug("Cache hit for key: {Key} (type {Type})", key, typeof(T).Name);
+#endif
                 return result;
             }
             catch (JsonException ex)

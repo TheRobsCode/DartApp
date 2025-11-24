@@ -28,9 +28,17 @@ namespace Dart
         {
             var handler = new HttpClientHandler
             {
-                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true,
+                AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate
             };
-            return new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(15) };
+            return new HttpClient(handler)
+            {
+                Timeout = TimeSpan.FromSeconds(10), // Reduced from 15s for faster failure
+                DefaultRequestHeaders =
+                {
+                    ConnectionClose = false // Keep-alive for better performance
+                }
+            };
         }
 
         public async Task<StationsDto[]> GetStations()
