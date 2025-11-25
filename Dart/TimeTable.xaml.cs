@@ -8,12 +8,14 @@ namespace Dart
     {
         private readonly ILogger<TimeTable>? _logger;
         private readonly IDartService _dartService;
+        private readonly ICacheService? _cacheService;
         private readonly string _station;
         private bool _isNorthVisible = true;
 
-        public TimeTable(IDartService dartService, string station, ILogger<TimeTable>? logger = null)
+        public TimeTable(IDartService dartService, string station, ILogger<TimeTable>? logger = null, ICacheService? cacheService = null)
         {
             _logger = logger;
+            _cacheService = cacheService;
             _logger?.LogInformation("TimeTable page initializing for station: {Station}", station);
 
             InitializeComponent();
@@ -22,6 +24,9 @@ namespace Dart
 
             StationNameLabel.Text = station;
             Title = station;
+
+            // Load saved direction preference for this station
+            LoadDirectionPreference();
 
             Loaded += async (s, e) => await LoadTimeTableAsync();
             RefreshTimes.Pressed += async (s, e) => await LoadTimeTableAsync();
@@ -37,6 +42,30 @@ namespace Dart
             timer.Start();
         }
 
+        private void LoadDirectionPreference()
+        {
+            if (_cacheService == null) return;
+
+            var cacheKey = $"direction_preference_{_station}";
+            var savedDirection = _cacheService.Get(cacheKey);
+
+            if (!string.IsNullOrEmpty(savedDirection))
+            {
+                _isNorthVisible = savedDirection == "north";
+                _logger?.LogDebug("Loaded direction preference for {Station}: {Direction}", _station, savedDirection);
+            }
+        }
+
+        private void SaveDirectionPreference(bool isNorth)
+        {
+            if (_cacheService == null) return;
+
+            var cacheKey = $"direction_preference_{_station}";
+            var direction = isNorth ? "north" : "south";
+            _cacheService.Set(cacheKey, direction);
+            _logger?.LogDebug("Saved direction preference for {Station}: {Direction}", _station, direction);
+        }
+
         private void ShowDirection(bool isNorth)
         {
             _isNorthVisible = isNorth;
@@ -45,6 +74,9 @@ namespace Dart
             EmptyStateNorth.IsVisible = isNorth && TimeTablesNorth.Children.Count == 0;
             EmptyStateSouth.IsVisible = !isNorth && TimeTablesSouth.Children.Count == 0;
             UpdateDirectionButtons();
+
+            // Save the direction preference when user changes it
+            SaveDirectionPreference(isNorth);
         }
 
         private void UpdateDirectionButtons()

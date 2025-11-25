@@ -212,7 +212,9 @@ namespace Dart
             _logger.LogInformation("Navigating to timetable for station: {Station}", station);
             try
             {
-                Navigation.PushAsync(new TimeTable(_dartService, station));
+                var loggerFactory = Handler?.MauiContext?.Services.GetService<ILoggerFactory>();
+                var timeTableLogger = loggerFactory?.CreateLogger<TimeTable>();
+                Navigation.PushAsync(new TimeTable(_dartService, station, timeTableLogger, _cacheService));
             }
             catch (Exception ex)
             {
