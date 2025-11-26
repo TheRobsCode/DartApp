@@ -17,6 +17,10 @@ namespace Dart.Helpers
         private static readonly Color CardBackgroundColorDark = Color.FromArgb("#2b2b2b");
         private static readonly Color CardBackgroundColorLight = Color.FromArgb("#ffffff");
 
+        // Recent station item background colors
+        private static readonly Color RecentItemBackgroundDark = Color.FromArgb("#2b2b2b");
+        private static readonly Color RecentItemBackgroundLight = Color.FromArgb("#f5f5f5");
+
         // Due time label colors
         private static readonly Color DueTimeUrgentColor = Color.FromArgb("#ff6b6b"); // Red for urgent trains
         private static readonly Color DueTimeNormalDarkColor = Color.FromArgb("#4ecdc4"); // Cyan for dark mode
@@ -28,9 +32,14 @@ namespace Dart.Helpers
         private static readonly Color TertiaryTextDarkColor = Color.FromArgb("#888888");
         private static readonly Color TertiaryTextLightColor = Color.FromArgb("#999999");
 
+        // Arrow/icon colors
+        private static readonly Color ArrowIconDarkColor = Color.FromArgb("#888888");
+        private static readonly Color ArrowIconLightColor = Color.FromArgb("#666666");
+
         // Button colors
         private static readonly Color SelectedButtonColor = Color.FromArgb("#512BD4");
         private static readonly Color UnselectedButtonColor = Colors.Transparent;
+        private static readonly Color SuccessButtonColor = Color.FromArgb("#4caf50"); // Green for share/success actions
 
         // Train type border colors
         public static Color GetTrainBorderColor(string trainType)
@@ -57,6 +66,14 @@ namespace Dart.Helpers
             return IsDarkTheme
                 ? CardBackgroundColorDark
                 : CardBackgroundColorLight;
+        }
+
+        // Recent station item background colors
+        public static Color GetRecentItemBackgroundColor()
+        {
+            return IsDarkTheme
+                ? RecentItemBackgroundDark
+                : RecentItemBackgroundLight;
         }
 
         // Due time label colors
@@ -88,6 +105,14 @@ namespace Dart.Helpers
                 : TertiaryTextLightColor;
         }
 
+        // Arrow/icon colors
+        public static Color GetArrowIconColor()
+        {
+            return IsDarkTheme
+                ? ArrowIconDarkColor
+                : ArrowIconLightColor;
+        }
+
         // Direction button colors
         public static Color GetSelectedButtonColor()
         {
@@ -97,6 +122,11 @@ namespace Dart.Helpers
         public static Color GetUnselectedButtonColor()
         {
             return UnselectedButtonColor;
+        }
+
+        public static Color GetSuccessButtonColor()
+        {
+            return SuccessButtonColor;
         }
     }
 }

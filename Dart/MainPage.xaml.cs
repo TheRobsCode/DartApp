@@ -1,6 +1,7 @@
 ﻿using MauiEx;
 using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Extensions.Logging;
+using Dart.Helpers;
 
 namespace Dart
 {
@@ -130,9 +131,7 @@ namespace Dart
                         StrokeThickness = 0,
                         Padding = new Thickness(16, 12),
                         Margin = new Thickness(0, 2),
-                        BackgroundColor = Application.Current.RequestedTheme == AppTheme.Dark
-                            ? Color.FromArgb("#2b2b2b")
-                            : Color.FromArgb("#f5f5f5")
+                        BackgroundColor = ColorHelper.GetRecentItemBackgroundColor()
                     };
                     border.StrokeShape = new RoundRectangle { CornerRadius = 10 };
 
@@ -157,9 +156,7 @@ namespace Dart
                         Text = "›",
                         FontSize = 24,
                         VerticalOptions = LayoutOptions.Center,
-                        TextColor = Application.Current.RequestedTheme == AppTheme.Dark
-                            ? Color.FromArgb("#888888")
-                            : Color.FromArgb("#666666")
+                        TextColor = ColorHelper.GetArrowIconColor()
                     };
 
                     grid.Add(label, 0, 0);

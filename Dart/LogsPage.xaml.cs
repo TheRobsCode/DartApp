@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Controls.Shapes;
 using System.Text;
+using Dart.Helpers;
 using Path = System.IO.Path;
 
 namespace Dart
@@ -80,13 +81,9 @@ namespace Dart
             var border = new Border
             {
                 StrokeThickness = 1,
-                Stroke = Application.Current.RequestedTheme == AppTheme.Dark
-                    ? Color.FromArgb("#3a3a3a")
-                    : Color.FromArgb("#e0e0e0"),
+                Stroke = ColorHelper.GetCardBorderColor(),
                 Padding = new Thickness(16, 12),
-                BackgroundColor = Application.Current.RequestedTheme == AppTheme.Dark
-                    ? Color.FromArgb("#2b2b2b")
-                    : Color.FromArgb("#ffffff")
+                BackgroundColor = ColorHelper.GetCardBackgroundColor()
             };
             border.StrokeShape = new RoundRectangle { CornerRadius = 12 };
 
@@ -112,9 +109,7 @@ namespace Dart
             {
                 Text = $"Size: {fileSize} | Modified: {lastModified}",
                 FontSize = 12,
-                TextColor = Application.Current.RequestedTheme == AppTheme.Dark
-                    ? Color.FromArgb("#b0b0b0")
-                    : Color.FromArgb("#666666")
+                TextColor = ColorHelper.GetSecondaryTextColor()
             };
 
             var buttonsLayout = new HorizontalStackLayout
@@ -127,7 +122,7 @@ namespace Dart
                 Text = "View",
                 FontSize = 12,
                 Padding = new Thickness(12, 4),
-                BackgroundColor = Color.FromArgb("#512BD4"),
+                BackgroundColor = ColorHelper.GetSelectedButtonColor(),
                 TextColor = Colors.White,
                 CornerRadius = 6
             };
@@ -138,7 +133,7 @@ namespace Dart
                 Text = "Share",
                 FontSize = 12,
                 Padding = new Thickness(12, 4),
-                BackgroundColor = Color.FromArgb("#4caf50"),
+                BackgroundColor = ColorHelper.GetSuccessButtonColor(),
                 TextColor = Colors.White,
                 CornerRadius = 6
             };
