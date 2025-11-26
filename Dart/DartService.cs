@@ -78,7 +78,8 @@ namespace Dart
                     DueIn = x.Duein,
                     EstimateTime = x.Exparrival,
                     Direction = x.Direction,
-                    Lastlocation = x.Lastlocation
+                    Lastlocation = x.Lastlocation,
+                    Traintype = x.Traintype
                 })
                 .ToArray();
 

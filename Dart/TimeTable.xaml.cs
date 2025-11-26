@@ -163,12 +163,14 @@ namespace Dart
                 ? $"Last seen: {item.Lastlocation}"
                 : string.Empty;
 
+            // Determine border color based on train type
+            var borderColor = Color.FromArgb(item.IsDart() ? "#14A085" : // Green for DART trains
+                "#FF8C00"); // Orange for other trains
+
             var border = new Border
             {
-                StrokeThickness = 1,
-                Stroke = Application.Current.RequestedTheme == AppTheme.Dark
-                    ? Color.FromArgb("#3a3a3a")
-                    : Color.FromArgb("#e0e0e0"),
+                StrokeThickness = 3,
+                Stroke = borderColor,
                 Padding = new Thickness(16, 12),
                 Margin = new Thickness(0, 2),
                 BackgroundColor = Application.Current.RequestedTheme == AppTheme.Dark

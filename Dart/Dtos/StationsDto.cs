@@ -15,6 +15,13 @@ namespace Dart.Dtos
         public string EstimateTime { get; set; }
         public string Origin { get; set; }
         public string Lastlocation { get; set; }
+        public string Traintype { get; set; }
+
+        public bool IsDart()
+        {
+            return !string.IsNullOrWhiteSpace(Traintype) &&
+                   Traintype.Equals("DART", StringComparison.OrdinalIgnoreCase);
+        }
     }
 
 
