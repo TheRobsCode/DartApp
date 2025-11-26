@@ -1,4 +1,5 @@
 ﻿using Dart.Dtos;
+using Dart.Helpers;
 using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Extensions.Logging;
 
@@ -81,10 +82,8 @@ namespace Dart
 
         private void UpdateDirectionButtons()
         {
-            var selectedColor = Application.Current.RequestedTheme == AppTheme.Dark
-                ? Color.FromArgb("#512BD4")
-                : Color.FromArgb("#512BD4");
-            var unselectedColor = Colors.Transparent;
+            var selectedColor = ColorHelper.GetSelectedButtonColor();
+            var unselectedColor = ColorHelper.GetUnselectedButtonColor();
 
             ShowNorth.BackgroundColor = _isNorthVisible ? selectedColor : unselectedColor;
             ShowSouth.BackgroundColor = _isNorthVisible ? unselectedColor : selectedColor;
@@ -163,19 +162,13 @@ namespace Dart
                 ? $"Last seen: {item.Lastlocation}"
                 : string.Empty;
 
-            // Determine border color based on train type
-            var borderColor = Color.FromArgb(item.IsDart() ? "#14A085" : // Green for DART trains
-                "#FF8C00"); // Orange for other trains
-
             var border = new Border
             {
                 StrokeThickness = 3,
-                Stroke = borderColor,
+                Stroke = ColorHelper.GetTrainBorderColor(item.Traintype),
                 Padding = new Thickness(16, 12),
                 Margin = new Thickness(0, 2),
-                BackgroundColor = Application.Current.RequestedTheme == AppTheme.Dark
-                    ? Color.FromArgb("#2b2b2b")
-                    : Color.FromArgb("#ffffff")
+                BackgroundColor = ColorHelper.GetCardBackgroundColor()
             };
             border.StrokeShape = new RoundRectangle { CornerRadius = 12 };
 
@@ -202,11 +195,7 @@ namespace Dart
                 FontSize = 28,
                 FontAttributes = FontAttributes.Bold,
                 VerticalOptions = LayoutOptions.Center,
-                TextColor = item.DueIn <= 5
-                    ? Color.FromArgb("#ff6b6b")
-                    : Application.Current.RequestedTheme == AppTheme.Dark
-                        ? Color.FromArgb("#4ecdc4")
-                        : Color.FromArgb("#2a9d8f")
+                TextColor = ColorHelper.GetDueTimeLabelColor(item.DueIn)
             };
             grid.Add(dueLabel, 0, 0);
             Grid.SetRowSpan(dueLabel, 2);
@@ -227,9 +216,7 @@ namespace Dart
                 Text = $"{item.Origin} → {item.Destination}",
                 FontSize = 14,
                 Margin = new Thickness(15, 0, 0, 0),
-                TextColor = Application.Current.RequestedTheme == AppTheme.Dark
-                    ? Color.FromArgb("#b0b0b0")
-                    : Color.FromArgb("#666666")
+                TextColor = ColorHelper.GetSecondaryTextColor()
             };
             grid.Add(routeLabel, 1, 1);
 
@@ -241,9 +228,7 @@ namespace Dart
                     Text = lastLocation,
                     FontSize = 12,
                     Margin = new Thickness(15, 0, 0, 0),
-                    TextColor = Application.Current.RequestedTheme == AppTheme.Dark
-                        ? Color.FromArgb("#888888")
-                        : Color.FromArgb("#999999")
+                    TextColor = ColorHelper.GetTertiaryTextColor()
                 };
                 grid.Add(locationLabel, 1, 2);
             }
