@@ -3,10 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Dart.TimeTable"
              x:Name="TimeTablePage">
-    <ScrollView>
+    <RefreshView x:Name="RefreshView"
+                 IsRefreshing="False"
+                 RefreshColor="{StaticResource Primary}">
+        <ScrollView>
 
-        <VerticalStackLayout Padding="20"
-                Spacing="15">
+            <VerticalStackLayout Padding="20"
+                    Spacing="15">
 
             <!-- Station Name Header -->
             <Label
@@ -143,7 +146,8 @@
                 Margin="0,10,0,0"
                 TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"/>
 
-        </VerticalStackLayout>
-    </ScrollView>
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
 
 </ContentPage>

@@ -33,6 +33,7 @@ namespace Dart
             RefreshTimes.Pressed += async (s, e) => await LoadTimeTableAsync();
             ShowNorth.Pressed += (s, e) => ShowDirection(isNorth: true);
             ShowSouth.Pressed += (s, e) => ShowDirection(isNorth: false);
+            RefreshView.Refreshing += async (s, e) => await OnRefreshAsync();
 
             UpdateDirectionButtons();
 
@@ -87,6 +88,23 @@ namespace Dart
 
             ShowNorth.BackgroundColor = _isNorthVisible ? selectedColor : unselectedColor;
             ShowSouth.BackgroundColor = _isNorthVisible ? unselectedColor : selectedColor;
+        }
+
+        private async Task OnRefreshAsync()
+        {
+            _logger?.LogInformation("Pull-to-refresh triggered for station: {Station}", _station);
+
+            try
+            {
+                await LoadTimeTableAsync();
+            }
+            finally
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    RefreshView.IsRefreshing = false;
+                });
+            }
         }
 
         private async Task LoadTimeTableAsync()
