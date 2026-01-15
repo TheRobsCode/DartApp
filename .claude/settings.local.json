@@ -4,7 +4,10 @@
       "Bash(dotnet --version:*)",
       "Bash(dotnet restore:*)",
       "Bash(dotnet build:*)",
-      "Bash(dotnet workload:*)"
+      "Bash(dotnet workload:*)",
+      "Bash(Select-String -Pattern \"error|succeeded|failed\")",
+      "Bash(Select-Object -Last 5)",
+      "Bash(dotnet test:*)"
     ],
     "deny": [],
     "ask": []
